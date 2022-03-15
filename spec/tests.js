@@ -12,3 +12,4 @@ require('@babel/register')({
 
 require('./test/r-if.test');
 require('./test/r-else.test');
+require('./test/r-else-if.test');

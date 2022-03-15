@@ -10,8 +10,12 @@ chai.use(chaiEnzyme());
 
 describe('React if with children', () => {
   it('should be rendered div when r-if = true', () => {
+    const Component = () => <>
+      <div r-if={true} className="test" />
+    </>;
+
     const wrapper = shallow(
-      <div r-if={true} className="test" />,
+      <Component />,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"></div>');

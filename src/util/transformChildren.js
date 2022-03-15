@@ -11,7 +11,7 @@ function transformChildren(types, children) {
     const attributeWithIf = getAttribute(types, attributes, attributeNames.R_IF);
 
     if (attributeWithIf) {
-      if (typeof acc.setElse !== 'undefined') {
+      if (typeof acc.setElse === 'function') {
         acc.children.push(acc.setElse(types.NullLiteral()));
       }
 
@@ -36,7 +36,7 @@ function transformChildren(types, children) {
     const attributeWithElseIf = getAttribute(types, attributes, attributeNames.R_ELSE_IF);
 
     if (attributeWithElseIf) {
-      if (typeof acc.setElse === 'undefined') {
+      if (typeof acc.setElse !== 'function') {
         throw new Error(`Not found ${attributeNames.R_IF}`);
       }
 
@@ -61,7 +61,7 @@ function transformChildren(types, children) {
     const attributeWithElse = getAttribute(types, attributes, attributeNames.R_ELSE);
 
     if (attributeWithElse) {
-      if (typeof acc.setElse === 'undefined') {
+      if (typeof acc.setElse !== 'function') {
         throw new Error(`Not found ${attributeNames.R_IF}`);
       }
 
@@ -81,7 +81,7 @@ function transformChildren(types, children) {
       };
     }
 
-    if (typeof acc.setElse === 'undefined') {
+    if (typeof acc.setElse !== 'function') {
       acc.children.push(node);
 
       return {
@@ -102,7 +102,7 @@ function transformChildren(types, children) {
     };
   }, { children: [], setElse: undefined });
 
-  if (typeof data.setElse === 'undefined') {
+  if (typeof data.setElse !== 'function') {
     return data.children;
   }
 

@@ -1,5 +1,4 @@
 const getChildren = require('./util/getChildren');
-const childrenHaveAttributes = require('./util/childrenHaveAttributes');
 const getJSXElement = require('./util/getJSXElement');
 const getAttributes = require('./util/getAttributes');
 const getAttribute = require('./util/getAttribute');
@@ -8,58 +7,89 @@ const getAttributeConditionExpression = require('./util/getAttributeConditionExp
 const attributeNames = require('./util/constants');
 
 module.exports = function (babel) {
+  let setElse = null;
+
   const visitor = {
     JSXElement(path) {
-      const attributes = getAttributes(path.node);
+      const { node } = path;
+      const { types } = babel;
 
-      const children = getChildren(babel.types, path.node);
+      const attributes = getAttributes(node);
 
-      if (!childrenHaveAttributes(
-        babel.types,
-        children,
-        [attributeNames.R_IF, attributeNames.R_ELSE_IF, attributeNames.R_ELSE],
-      )) {
-        const attributeWithIf = getAttribute(
-          babel.types,
-          attributes,
-          attributeNames.R_IF,
+      const children = getChildren(types, node);
+
+      const attributeWithIf = getAttribute(types, attributes, attributeNames.R_IF);
+
+      if (attributeWithIf) {
+        const conditionExpression = getAttributeConditionExpression(types, attributeNames.R_IF, attributeWithIf);
+
+        const yes = getJSXElement(
+          types,
+          node,
+          attributes.filter((attr) => attr.name.name !== attributeNames.R_IF),
+          transformChildren(types, children),
         );
 
-        if (!attributeWithIf) {
-          return;
+        setElse = (no) => types.jSXExpressionContainer(
+          types.ConditionalExpression(conditionExpression, types.NullLiteral(), no),
+        );
+
+        path.replaceWith(
+          types.jSXExpressionContainer(
+            types.ConditionalExpression(conditionExpression, yes, types.NullLiteral()),
+          ),
+        );
+      }
+
+      const attributeWithElseIf = getAttribute(types, attributes, attributeNames.R_ELSE_IF);
+
+      if (attributeWithElseIf) {
+        if (typeof setElse !== 'function') {
+          throw new Error(`Not found ${attributeNames.R_IF}`);
         }
 
-        const existsConditionExpression = getAttributeConditionExpression(
-          babel.types,
-          attributeNames.R_IF,
-          attributeWithIf,
-        );
+        const conditionExpression = getAttributeConditionExpression(types, attributeNames.R_ELSE_IF, attributeWithElseIf);
 
-        path.replaceWithMultiple(
-          babel.types.ConditionalExpression(
-            existsConditionExpression,
-            getJSXElement(
-              babel.types,
-              path.node,
-              attributes.filter((attr) => attr.name.name !== attributeNames.R_IF),
+        path.replaceWith(
+          setElse(
+            types.ConditionalExpression(
+              conditionExpression,
+              getJSXElement(
+                types,
+                node,
+                attributes.filter((attr) => attr.name.name !== attributeNames.R_ELSE_IF),
+                transformChildren(types, children),
+              ),
+              types.NullLiteral(),
             ),
-            babel.types.NullLiteral(),
           ),
         );
 
-        return;
+        const oldSetElse = setElse;
+
+        setElse = (no) => oldSetElse(types.ConditionalExpression(conditionExpression, types.NullLiteral(), no));
       }
 
-      const newChildren = transformChildren(babel.types, children);
+      const attributeWithElse = getAttribute(types, attributes, attributeNames.R_ELSE);
 
-      path.replaceWithMultiple([
-        getJSXElement(
-          babel.types,
-          path.node,
-          attributes,
-          newChildren,
-        ),
-      ]);
+      if (attributeWithElse) {
+        if (typeof setElse !== 'function') {
+          throw new Error(`Not found ${attributeNames.R_IF}`);
+        }
+
+        path.replaceWith(
+          setElse(
+            getJSXElement(
+              types,
+              node,
+              attributes.filter((attr) => attr.name.name !== attributeNames.R_ELSE),
+              transformChildren(types, children),
+            ),
+          ),
+        );
+
+        setElse = null;
+      }
     },
   };
 

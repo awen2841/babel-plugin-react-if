@@ -28,8 +28,8 @@ The directive r-if is used to conditionally render a block. The block will only 
 You can use the r-else directive to indicate an "else block" for r-if:
 
 ```javascript
-<h1 v-if="awesome">React is awesome!</h1>
-<h1 v-else>Oh no 😢</h1>
+<h1 r-if="awesome">React is awesome!</h1>
+<h1 r-else>Oh no 😢</h1>
 ```
 
 A r-else element must immediately follow a r-if or a r-else-if element - otherwise it will not be recognized.
