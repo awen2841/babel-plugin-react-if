@@ -4,14 +4,14 @@ As a prerequisite you need to have [Babel](https://github.com/babel/babel) insta
 Install via npm:
 
 ```
-  npm install babel-plugin-react-if --save-dev
+  npm install babel-plugin-jsx-react-if --save-dev
 ```
 
 Then you only need to specify `react-if` as Babel plugin, which you would typically do in your `.babelrc`:
 ```
 "plugins": [
   ...
-  "babel-plugin-react-if"
+  "babel-plugin-jsx-react-if"
 ]
 ```
 
