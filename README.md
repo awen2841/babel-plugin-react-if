@@ -11,7 +11,7 @@ Then you only need to specify `react-if` as Babel plugin, which you would typica
 ```
 "plugins": [
   ...
-  "react-if"
+  "babel-plugin-react-if"
 ]
 ```
 
