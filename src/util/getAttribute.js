@@ -1,5 +1,5 @@
 function getAttribute(babelTypes, attributes, name) {
-  return (attributes || []).find(function (attr) {
+  return (attributes || []).find((attr) => {
     if (babelTypes.isJSXSpreadAttribute(attr)) {
       return false;
     }

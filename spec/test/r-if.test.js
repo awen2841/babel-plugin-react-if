@@ -1,74 +1,75 @@
-var React = require('react');
-var chai = require('chai');
-var chaiEnzyme = require('chai-enzyme');
-var shallow = require('enzyme').shallow;
-var expect = chai.expect;
-var Button = require('../fixtures/Button');
+const React = require('react');
+const chai = require('chai');
+const chaiEnzyme = require('chai-enzyme');
+const { shallow } = require('enzyme');
+
+const { expect } = chai;
+const Button = require('../fixtures/Button');
 
 chai.use(chaiEnzyme());
 
-describe('React if with children', function () {
-  it('should be rendered div when r-if = true', function () {
-    var wrapper = shallow(
-      <div r-if={true} className="test" />
+describe('React if with children', () => {
+  it('should be rendered div when r-if = true', () => {
+    const wrapper = shallow(
+      <div r-if={true} className="test" />,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"></div>');
   });
 
-  it('should be rendered with children div when r-if = true', function () {
+  it('should be rendered with children div when r-if = true', () => {
     const render = true;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <div r-if={render} className="a" />
         <div className="b" />
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"><div class="a"></div><div class="b"></div></div>');
   });
 
-  it('should not render with children div when r-if = false', function () {
+  it('should not render with children div when r-if = false', () => {
     const render = false;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <div r-if={render} className="a" />
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"></div>');
   });
 
-  it('should be rendered with children h1 when r-if = true', function () {
+  it('should be rendered with children h1 when r-if = true', () => {
     const render = true;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <h1 r-if={render} className="a" />
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"><h1 class="a"></h1></div>');
   });
 
-  it('should not render with children h1 when r-if = false', function () {
+  it('should not render with children h1 when r-if = false', () => {
     const render = false;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <h1 r-if={render} className="a" />
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"></div>');
   });
 
-  it('should be rendered when there are a lot of children h1 when r-if = true', function () {
+  it('should be rendered when there are a lot of children h1 when r-if = true', () => {
     const render = true;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <div r-if={render} className="title" >
           <p r-if={render} className="p" >
@@ -80,16 +81,16 @@ describe('React if with children', function () {
             title
           </p>
         </div>
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"><div class="title"><p class="p">title</p></div><div class="title"><p class="p">title</p></div></div>');
   });
 
-  it('should not render when there are a lot of children h1 when r-if = false', function () {
+  it('should not render when there are a lot of children h1 when r-if = false', () => {
     const render = false;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <div r-if={render} className="title" >
           <p r-if={render} className="p" >
@@ -101,31 +102,31 @@ describe('React if with children', function () {
             title
           </p>
         </div>
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"></div>');
   });
 
-  it('should be rendered with children Button when r-if = true', function () {
+  it('should be rendered with children Button when r-if = true', () => {
     const render = true;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <Button r-if={render} >Button</Button>
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"><button>Button</button></div>');
   });
 
-  it('should not render with children Button when r-if = false', function () {
+  it('should not render with children Button when r-if = false', () => {
     const render = false;
 
-    var wrapper = shallow(
+    const wrapper = shallow(
       <div className="test">
         <Button r-if={render} className="a" />
-      </div>
+      </div>,
     );
 
     expect(wrapper.html()).to.equal('<div class="test"></div>');

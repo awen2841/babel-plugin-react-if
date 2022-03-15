@@ -1,5 +1,5 @@
 function includesAttributeName(babelTypes, attributes, names) {
-  return (attributes || []).some(function (attr) {
+  return (attributes || []).some((attr) => {
     if (babelTypes.isJSXSpreadAttribute(attr)) {
       return false;
     }

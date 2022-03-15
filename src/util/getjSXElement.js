@@ -1,4 +1,4 @@
-var getChildren = require('./getChildren');
+const getChildren = require('./getChildren');
 
 function getJSXElement(babelTypes, node, attributes, children) {
   if (typeof children === 'undefined') {
@@ -6,11 +6,11 @@ function getJSXElement(babelTypes, node, attributes, children) {
       babelTypes.JSXOpeningElement(
         babelTypes.jSXIdentifier(node.openingElement.name.name),
         attributes,
-        true
+        true,
       ),
       null,
       getChildren(babelTypes, node),
-      true
+      true,
     );
   }
 
@@ -18,11 +18,11 @@ function getJSXElement(babelTypes, node, attributes, children) {
     babelTypes.JSXOpeningElement(
       babelTypes.jSXIdentifier(node.openingElement.name.name),
       attributes,
-      true
+      true,
     ),
     null,
     children,
-    true
+    true,
   );
 }
 

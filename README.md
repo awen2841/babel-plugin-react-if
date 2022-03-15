@@ -1,3 +1,20 @@
+## Installation
+As a prerequisite you need to have [Babel](https://github.com/babel/babel) installed and configured in your project.
+
+Install via npm:
+
+```
+  npm install babel-plugin-react-if --save-dev
+```
+
+Then you only need to specify `react-if` as Babel plugin, which you would typically do in your `.babelrc`:
+```
+"plugins": [
+  ...
+  "react-if"
+]
+```
+
 ## r-if
 
 The directive r-if is used to conditionally render a block. The block will only be rendered if the directive's expression returns a truthy value.

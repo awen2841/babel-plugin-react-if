@@ -1,14 +1,14 @@
-var getAttributes = require('./getAttributes');
-var getAttribute = require('./getAttribute');
-var getJSXElement = require('./getJSXElement');
-var attributeNames = require('./constants');
-var getAttributeConditionExpression = require('./getAttributeConditionExpression');
+const getAttributes = require('./getAttributes');
+const getAttribute = require('./getAttribute');
+const getJSXElement = require('./getJSXElement');
+const attributeNames = require('./constants');
+const getAttributeConditionExpression = require('./getAttributeConditionExpression');
 
 function transformChildren(types, children) {
-  var data = children.reduce(function (acc, node) {
-    var attributes = getAttributes(node);
+  const data = children.reduce((acc, node) => {
+    const attributes = getAttributes(node);
 
-    var attributeWithIf = getAttribute(types, attributes, attributeNames.R_IF);
+    const attributeWithIf = getAttribute(types, attributes, attributeNames.R_IF);
 
     if (attributeWithIf) {
       if (typeof acc.setElse !== 'undefined') {
@@ -17,71 +17,67 @@ function transformChildren(types, children) {
 
       return {
         children: acc.children,
-        setElse: function (no) {
-          var conditionExpression = getAttributeConditionExpression(
-            types, attributeNames.R_IF, attributeWithIf
-          );
+        setElse(no) {
+          const conditionExpression = getAttributeConditionExpression(types, attributeNames.R_IF, attributeWithIf);
 
-          var yes = getJSXElement(
+          const yes = getJSXElement(
             types,
             node,
             attributes.filter((attr) => attr.name.name !== attributeNames.R_IF),
           );
 
           return types.jSXExpressionContainer(
-            types.ConditionalExpression(conditionExpression, yes, no)
+            types.ConditionalExpression(conditionExpression, yes, no),
           );
-        }
+        },
       };
     }
 
-    var attributeWithElseIf = getAttribute(types, attributes, attributeNames.R_ELSE_IF);
+    const attributeWithElseIf = getAttribute(types, attributes, attributeNames.R_ELSE_IF);
 
     if (attributeWithElseIf) {
       if (typeof acc.setElse === 'undefined') {
-        throw new Error('Not found ' + attributeNames.R_IF);
+        throw new Error(`Not found ${attributeNames.R_IF}`);
       }
 
       return {
         children: acc.children,
-        setElse: function (no) {
-          var conditionExpression = getAttributeConditionExpression(
-            types, attributeNames.R_ELSE_IF, attributeWithElseIf
-          );
+        setElse(no) {
+          const conditionExpression = getAttributeConditionExpression(types, attributeNames.R_ELSE_IF, attributeWithElseIf);
 
-          var yes = getJSXElement(
+          const yes = getJSXElement(
             types,
             node,
             attributes.filter((attr) => attr.name.name !== attributeNames.R_ELSE_IF),
           );
 
           return acc.setElse(
-              types.ConditionalExpression(conditionExpression, yes, no)
+            types.ConditionalExpression(conditionExpression, yes, no),
           );
-        }
+        },
       };
     }
 
-    var attributeWithElse = getAttribute(types, attributes, attributeNames.R_ELSE);
+    const attributeWithElse = getAttribute(types, attributes, attributeNames.R_ELSE);
 
     if (attributeWithElse) {
       if (typeof acc.setElse === 'undefined') {
-        throw new Error('Not found ' + attributeNames.R_IF);
+        throw new Error(`Not found ${attributeNames.R_IF}`);
       }
 
-      var no = getJSXElement(
+      const no = getJSXElement(
         types,
         node,
         attributes.filter((attr) => attr.name.name !== attributeNames.R_ELSE),
       );
 
       acc.children.push(
-        acc.setElse(no)
+        acc.setElse(no),
       );
 
       return {
         children: acc.children,
-        setElse: undefined
+        setElse: undefined,
       };
     }
 
@@ -90,19 +86,19 @@ function transformChildren(types, children) {
 
       return {
         children: acc.children,
-        setElse: undefined
+        setElse: undefined,
       };
     }
 
     acc.children.push(
-      acc.setElse(types.NullLiteral())
+      acc.setElse(types.NullLiteral()),
     );
 
     acc.children.push(node);
 
     return {
       children: acc.children,
-      setElse: undefined
+      setElse: undefined,
     };
   }, { children: [], setElse: undefined });
 
